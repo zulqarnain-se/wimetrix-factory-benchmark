@@ -156,7 +156,7 @@
     q.options.forEach(function(opt, idx){
       itemsHtml +=
         '<button type="button" data-role="dd-item" data-idx="'+idx+'" ' +
-          'class="dd-item w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium text-slate-700 transition-colors flex items-center justify-between hover:bg-[#e6f7f3] hover:text-[#00a884] hover:font-bold">' +
+          'class="dd-item w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium text-slate-700 transition-colors flex items-center justify-between hover:bg-[#eff6ed] hover:text-[#428830] hover:font-bold">' +
           '<span>'+opt+'</span>' +
           '<svg aria-hidden="true" class="dd-check hidden shrink-0 ml-2" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
         '</button>';
@@ -186,7 +186,7 @@
       panel.classList.remove("hidden");
       trigger.setAttribute("aria-expanded", "true");
       chevron.classList.add("rotate-180");
-      trigger.style.boxShadow = "0 0 0 3px rgba(0,168,132,0.18)";
+      trigger.style.boxShadow = "0 0 0 3px rgba(66,136,48,0.18)";
     }
     function closeDD(){
       panel.classList.add("hidden");
@@ -210,8 +210,8 @@
         label.classList.add("text-slate-900");
         items.forEach(function(other){
           var isSel = other === item;
-          other.classList.toggle("bg-[#e6f7f3]", isSel);
-          other.classList.toggle("text-[#00a884]", isSel);
+          other.classList.toggle("bg-[#eff6ed]", isSel);
+          other.classList.toggle("text-[#428830]", isSel);
           other.classList.toggle("font-bold", isSel);
           var check = other.querySelector(".dd-check");
           if (check) check.classList.toggle("hidden", !isSel);
@@ -384,7 +384,7 @@
     panel.appendChild(note);
 
     var cardBase = "q3-choice-card relative min-h-[92px] sm:min-h-[100px] flex flex-col items-center justify-center border-2 border-gray-200 rounded-xl p-3 text-center cursor-pointer hover:border-emerald-300 transition-all duration-200";
-    var symbolClass = "text-2xl font-extrabold text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.6)] text-center";
+    var symbolClass = "text-2xl font-extrabold text-emerald-500 drop-shadow-[0_0_8px_rgba(66,136,48,0.6)] text-center";
 
     var controlWrap = document.createElement("div");
     controlWrap.innerHTML =
@@ -461,12 +461,12 @@
       if (!submitBtn) return;
       submitBtn.disabled = !answered;
       submitBtn.className = answered
-        ? "mt-5 w-full py-3 inline-flex items-center justify-center gap-2 rounded-xl text-xs font-bold transition-all duration-200 bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.01] active:scale-[0.99]"
+        ? "mt-5 w-full py-3 inline-flex items-center justify-center gap-2 rounded-xl text-xs font-bold transition-all duration-200 bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-700 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.01] active:scale-[0.99]"
         : "mt-5 w-full py-3 inline-flex items-center justify-center gap-2 rounded-xl text-xs font-bold transition-all duration-200 bg-slate-100 text-slate-400 cursor-not-allowed";
     } else if (currentStep === 2 || currentStep === 3){
       nextBtn.disabled = !answered;
       nextBtn.className = answered
-        ? "ml-auto inline-flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-xs font-bold transition-all duration-200 bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20"
+        ? "ml-auto inline-flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-xs font-bold transition-all duration-200 bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20"
         : "ml-auto inline-flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-xs font-bold transition-all duration-200 bg-slate-100 text-slate-400 cursor-not-allowed";
     }
   }
@@ -581,9 +581,9 @@
 
     const ICON_SQMS = '<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>';
     const ICON_FABRIC = '<path d="M3 6l3-3h12l3 3"/><path d="M4 6h16v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M9 11l2 2 4-4"/>';
-    const ICON_SPTS = '<path d="M3 3v18h18"/><path d="M7 15l3-4 3 2 4-6"/><circle cx="7" cy="15" r="1" fill="#00a884" stroke="none"/><circle cx="10" cy="11" r="1" fill="#00a884" stroke="none"/><circle cx="13" cy="13" r="1" fill="#00a884" stroke="none"/><circle cx="17" cy="7" r="1" fill="#00a884" stroke="none"/>';
+    const ICON_SPTS = '<path d="M3 3v18h18"/><path d="M7 15l3-4 3 2 4-6"/><circle cx="7" cy="15" r="1" fill="#428830" stroke="none"/><circle cx="10" cy="11" r="1" fill="#428830" stroke="none"/><circle cx="13" cy="13" r="1" fill="#428830" stroke="none"/><circle cx="17" cy="7" r="1" fill="#428830" stroke="none"/>';
     const ICON_PLANPRO = '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><path d="M8 14l2.5 2.5L16 12"/>';
-    const ICON_AIOPS = '<rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V5"/><circle cx="12" cy="3.5" r="1.2" fill="#00a884" stroke="none"/><circle cx="9" cy="13" r="1.3" fill="#00a884" stroke="none"/><circle cx="15" cy="13" r="1.3" fill="#00a884" stroke="none"/><path d="M9 17h6"/>';
+    const ICON_AIOPS = '<rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8V5"/><circle cx="12" cy="3.5" r="1.2" fill="#428830" stroke="none"/><circle cx="9" cy="13" r="1.3" fill="#428830" stroke="none"/><circle cx="15" cy="13" r="1.3" fill="#428830" stroke="none"/><path d="M9 17h6"/>';
 
     const DESC_FABRIC = '<span class="font-bold text-gray-900">Save 2%\u20135% fabric utilization</span> through optimized spreading and marker control.';
     const DESC_SQMS = '<span class="font-bold text-gray-900">Cut floor defect rates by up to 50%</span> with station-level inline quality tracking.';
@@ -592,22 +592,22 @@
     const DESC_AIOPS = '<span class="font-bold text-gray-900">Prevent floor stoppages</span> with predictive anomaly detection.';
 
     function moduleCard(icon, title, desc){
-      return '<div class="rounded-2xl bg-white border border-[#00a884]/40 p-5 text-center shadow-[0_4px_20px_rgba(0,168,132,0.12)]">' +
+      return '<div class="rounded-2xl bg-white border border-[#428830]/40 p-5 text-center shadow-[0_4px_20px_rgba(66,136,48,0.12)]">' +
         '<span class="inline-flex items-center justify-center w-11 h-11 rounded-xl mb-2.5 chip-emerald">' +
-          '<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00a884" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+icon+'</svg>' +
+          '<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#428830" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+icon+'</svg>' +
         '</span>' +
         '<h3 class="text-base font-black tracking-tight text-gray-900">'+title+'</h3>' +
         '<p class="text-[11.5px] leading-relaxed text-gray-500 mt-1">'+desc+'</p>' +
       '</div>';
     }
     function moduleBtn(label, url){
-      return '<a href="'+url+'" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-4 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-2 shadow-md" style="background-color:#00a884;" onmouseover="this.style.backgroundColor=\'#008f70\'" onmouseout="this.style.backgroundColor=\'#00a884\'">' +
+      return '<a href="'+url+'" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-4 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-2 shadow-md" style="background-color:#428830;" onmouseover="this.style.backgroundColor=\'#356d26\'" onmouseout="this.style.backgroundColor=\'#428830\'">' +
         label +
         '<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
       '</a>';
     }
     function banner(msg){
-      return '<div class="my-5 rounded-2xl bg-emerald-50/70 border border-emerald-400/50 p-4 text-center shadow-[0_4px_20px_rgba(0,168,132,0.12)]"><p class="text-[13px] leading-relaxed font-bold text-gray-900">'+msg+'</p></div>';
+      return '<div class="my-5 rounded-2xl bg-emerald-50/70 border border-emerald-400/50 p-4 text-center shadow-[0_4px_20px_rgba(66,136,48,0.12)]"><p class="text-[13px] leading-relaxed font-bold text-gray-900">'+msg+'</p></div>';
     }
     function dualCards(c1, c2){ return '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-5">'+c1+c2+'</div>'; }
     function labeledDualCards(label, c1, c2){
@@ -690,9 +690,9 @@
     } else if (highEfficiency){
       middleSection =
         banner('Your factory is operating at high efficiency and everything is on track! Deploy AI Production Intelligence to take operations to the next level.') +
-        '<div class="my-5 rounded-2xl bg-white border border-[#00a884]/40 p-6 text-center shadow-[0_4px_20px_rgba(0,168,132,0.12)]">' +
+        '<div class="my-5 rounded-2xl bg-white border border-[#428830]/40 p-6 text-center shadow-[0_4px_20px_rgba(66,136,48,0.12)]">' +
           '<span class="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-3 chip-emerald">' +
-            '<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00a884" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+ICON_AIOPS+'</svg>' +
+            '<svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#428830" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+ICON_AIOPS+'</svg>' +
           '</span>' +
           '<h3 class="text-lg font-black tracking-tight text-gray-900">AI-Based Operations Management</h3>' +
           '<p class="text-[12px] leading-relaxed text-gray-500 mt-1.5 max-w-[38ch] mx-auto">Real-time floor intelligence, predictive scheduling, and automated bottleneck detection \u2014 built to push a high-performing plant even further.</p>' +
@@ -701,7 +701,7 @@
     } else {
       middleSection =
         '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">' +
-          '<div class="bg-white border border-emerald-400/50 rounded-2xl p-5 flex flex-col shadow-[0_4px_20px_rgba(0,168,132,0.12)]">' +
+          '<div class="bg-white border border-emerald-400/50 rounded-2xl p-5 flex flex-col shadow-[0_4px_20px_rgba(66,136,48,0.12)]">' +
             '<h4 class="text-[11px] font-bold tracking-wider uppercase text-gray-500">Efficiency &amp; Time Savings</h4>' +
             '<h3 class="text-2xl font-black tracking-tight leading-tight text-gray-900 mt-3">RECOVER '+r.otHours+' HRS/WK</h3>' +
             '<div class="pt-4 mt-4 grid grid-cols-2 gap-2 text-[11px] leading-snug text-gray-500 card-divider">' +
@@ -709,7 +709,7 @@
               '<div>Potential for +'+r.effGain+' efficiency pts gain</div>' +
             '</div>' +
           '</div>' +
-          '<div class="bg-white border border-emerald-400/50 rounded-2xl p-5 flex flex-col shadow-[0_4px_20px_rgba(0,168,132,0.12)]">' +
+          '<div class="bg-white border border-emerald-400/50 rounded-2xl p-5 flex flex-col shadow-[0_4px_20px_rgba(66,136,48,0.12)]">' +
             '<h4 class="text-[11px] font-bold tracking-wider uppercase text-gray-500">Machine &amp; Production Volume</h4>' +
             '<h3 class="text-2xl font-black tracking-tight leading-tight text-gray-900 mt-3">'+volumeFormatted+' PCS/MONTH</h3>' +
             '<div class="pt-4 mt-4 text-[11px] leading-snug space-y-1 text-gray-500 card-divider">' +
@@ -720,7 +720,7 @@
         '</div>';
       ctaSection =
         '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">' +
-          '<button id="results-primary-cta" class="w-full py-3.5 px-4 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-2 shadow-md btn-pine" onmouseover="this.style.backgroundColor=\'#004d40\'" onmouseout="this.style.backgroundColor=\'#00796b\'">' +
+          '<button id="results-primary-cta" class="w-full py-3.5 px-4 text-white text-xs font-bold rounded-xl transition flex items-center justify-center gap-2 shadow-md btn-pine" onmouseover="this.style.backgroundColor=\'#356d26\'" onmouseout="this.style.backgroundColor=\'#428830\'">' +
             'Book a 20-min Demo' +
             '<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
           '</button>' +
@@ -814,7 +814,7 @@
       l.classList.remove("text-slate-900");
     });
     wizardSteps.querySelectorAll('[data-role="dd-item"]').forEach(function(o){
-      o.classList.remove("bg-[#e6f7f3]", "text-[#00a884]", "font-bold");
+      o.classList.remove("bg-[#eff6ed]", "text-[#428830]", "font-bold");
       var check = o.querySelector(".dd-check");
       if (check) check.classList.add("hidden");
     });

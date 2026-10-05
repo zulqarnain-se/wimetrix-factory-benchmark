@@ -7,6 +7,21 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
+<script>
+  /* Point Tailwind's emerald-* utilities at the brand green variables in css/styles.css */
+  tailwind.config = { theme: { extend: { colors: { emerald: {
+    50:  "rgb(var(--green-50-rgb) / <alpha-value>)",
+    100: "rgb(var(--green-100-rgb) / <alpha-value>)",
+    200: "rgb(var(--green-200-rgb) / <alpha-value>)",
+    300: "rgb(var(--green-300-rgb) / <alpha-value>)",
+    400: "rgb(var(--green-400-rgb) / <alpha-value>)",
+    500: "rgb(var(--green-500-rgb) / <alpha-value>)",
+    600: "rgb(var(--green-600-rgb) / <alpha-value>)",
+    700: "rgb(var(--green-700-rgb) / <alpha-value>)",
+    800: "rgb(var(--green-800-rgb) / <alpha-value>)",
+    900: "rgb(var(--green-900-rgb) / <alpha-value>)"
+  } } } } };
+</script>
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>

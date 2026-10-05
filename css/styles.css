@@ -12,12 +12,25 @@
   --ink-400:#8A928C;
   --border:#E3E7E4;
 
-  /* Brand greens */
-  --green-700:#047857;
-  --green-600:#059669;
-  --green-500:#10B981;
-  --green-100:#D1FAE5;
-  --green-50:#ECFDF5;
+  /* Brand greens — official WiMetrix green is #428830 (66 136 48).
+     Declared as RGB channels so Tailwind's emerald-* utilities (remapped
+     to these in index.html) keep working with opacity modifiers. */
+  --green-900-rgb:31 64 22;
+  --green-800-rgb:42 86 30;
+  --green-700-rgb:53 109 38;
+  --green-600-rgb:66 136 48;
+  --green-500-rgb:66 136 48;
+  --green-400-rgb:107 166 91;
+  --green-300-rgb:151 194 139;
+  --green-200-rgb:194 220 187;
+  --green-100-rgb:221 235 217;
+  --green-50-rgb:239 246 237;
+
+  --green-700:rgb(var(--green-700-rgb));
+  --green-600:rgb(var(--green-600-rgb));
+  --green-500:rgb(var(--green-500-rgb));
+  --green-100:rgb(var(--green-100-rgb));
+  --green-50:rgb(var(--green-50-rgb));
 
   /* Motion — shared entrance timing for modal + backdrop */
   --anim-enter:0.22s ease-out;
@@ -87,8 +100,8 @@ a:focus-visible{
    RESULTS-SCREEN UTILITIES
    Recurring values lifted out of the JS result-card templates.
    ============================================================ */
-.btn-pine{ background-color:#00796b; }
-.chip-emerald{ background-color:rgba(0,168,132,0.12); }
+.btn-pine{ background-color:var(--green-600); }
+.chip-emerald{ background-color:rgb(var(--green-600-rgb) / 0.12); }
 .card-divider{ border-top:1px solid #f1f5f9; }
 
 /* ============================================================
