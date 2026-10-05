@@ -1,50 +1,15 @@
-/* WiMetrix Factory Benchmark — DOM wiring: hero chart, wizard steps, results, modal.
+/* WiMetrix Factory Benchmark — DOM wiring: wizard steps, results.
    Requires config.js and formulas.js to be loaded first. */
 (function(){
   "use strict";
 
   const {
-    WEEKLY_EFFICIENCY, QUESTIONS, CATEGORY_CARDS,
+    QUESTIONS, CATEGORY_CARDS,
     AI_OPS_MODULE_URL, PLAN_PRO_MODULE_URL, SPTS_MODULE_URL, SQMS_MODULE_URL, FABRIC_SAVER_MODULE_URL
   } = window.WiMetrix.config;
   const { getQ3PredictedBaseline, getQ3ComparisonValues, computeDiagnostic } = window.WiMetrix.formulas;
 
   var answers = { q1:"", q2:"", q3:"", currentProfitPercentage:"" };
-
-  /* ---------------------------- Chart ---------------------------- */
-  function renderChart(){
-    var w = 520, h = 160, pad = 28, max = 80, min = 50;
-    var stepX = (w - pad*2) / (WEEKLY_EFFICIENCY.length - 1);
-    function yFor(v){ return h - pad - ((v - min) / (max - min)) * (h - pad*1.6); }
-    var points = WEEKLY_EFFICIENCY.map(function(v,i){ return [pad + i*stepX, yFor(v)]; });
-    var linePath = points.map(function(p,i){ return (i===0?"M ":"L ") + p[0] + "," + p[1]; }).join(" ");
-    var areaPath = linePath + " L " + points[points.length-1][0] + "," + (h-pad) + " L " + points[0][0] + "," + (h-pad) + " Z";
-
-    var svg = document.getElementById("efficiency-chart");
-    var gridLines = "";
-    for (let i=0;i<4;i++){
-      let y = pad + i*((h-pad*1.6)/3);
-      gridLines += '<line x1="'+pad+'" y1="'+y+'" x2="'+(w-pad)+'" y2="'+y+'" stroke="#E3E7E4" stroke-width="1"/>';
-    }
-    var dots = points.map(function(p,i){
-      var last = i === points.length-1;
-      return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(last?4.5:3)+'" fill="'+(last?"#059669":"#FFFFFF")+'" stroke="#059669" stroke-width="2"/>';
-    }).join("");
-    var labels = WEEKLY_EFFICIENCY.map(function(v,i){
-      return '<text x="'+(pad+i*stepX)+'" y="'+(h-6)+'" font-size="9" text-anchor="middle" fill="#8A928C" font-family="Inter">W'+(i+1)+'</text>';
-    }).join("");
-
-    svg.innerHTML =
-      gridLines +
-      '<defs><linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">' +
-      '<stop offset="0%" stop-color="#10B981" stop-opacity="0.22"/>' +
-      '<stop offset="100%" stop-color="#10B981" stop-opacity="0"/>' +
-      '</linearGradient></defs>' +
-      '<path d="'+areaPath+'" fill="url(#areaFill)"/>' +
-      '<path d="'+linePath+'" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>' +
-      dots + labels;
-  }
-  renderChart();
 
   /* ---------------------------- Modal field rendering ---------------------------- */
   var wizardSteps = document.getElementById("step-panels");
@@ -812,7 +777,7 @@
       ctaSection;
 
     var primaryCta = document.getElementById("results-primary-cta");
-    if (primaryCta && primaryCta.tagName === "BUTTON") primaryCta.addEventListener("click", closeModal);
+    if (primaryCta && primaryCta.tagName === "BUTTON") primaryCta.addEventListener("click", restartDiagnostic);
     document.getElementById("results-secondary-cta").addEventListener("click", restartDiagnostic);
 
     var arc = document.getElementById("gauge-arc-fill");
@@ -881,31 +846,5 @@
     resultsState.classList.add("hidden");
     formState.classList.remove("hidden");
   }
-
-  /* ---------------------------- Modal open/close ---------------------------- */
-  var modalRoot = document.getElementById("modal-root");
-  var modalBackdrop = document.getElementById("modal-backdrop");
-  var modalCloseBtn = document.getElementById("modal-close");
-
-  function openModal(){
-    modalRoot.classList.remove("hidden");
-    modalRoot.classList.add("flex");
-    document.body.style.overflow = "hidden";
-  }
-  function closeModal(){
-    modalRoot.classList.add("hidden");
-    modalRoot.classList.remove("flex");
-    document.body.style.overflow = "";
-    setTimeout(restartDiagnostic, 200);
-  }
-
-  document.querySelectorAll("[data-open-modal]").forEach(function(btn){
-    btn.addEventListener("click", openModal);
-  });
-  modalCloseBtn.addEventListener("click", closeModal);
-  modalBackdrop.addEventListener("click", closeModal);
-  window.addEventListener("keydown", function(e){
-    if (e.key === "Escape" && !modalRoot.classList.contains("hidden")) closeModal();
-  });
 
 })();
