@@ -847,4 +847,25 @@
     formState.classList.remove("hidden");
   }
 
+  /* ---------------------------- Embed height reporting ---------------------------- */
+  /* When iframed, tell the host page how tall the content is so it can size the frame
+     to the active step (open dropdown panels overflow the card, so include them). */
+  if (window.parent !== window){
+    var appRoot = document.getElementById("benchmark-wizard-app");
+    var lastHeight = 0;
+    var reportHeight = function(){
+      var bottom = appRoot.getBoundingClientRect().bottom;
+      appRoot.querySelectorAll('[data-role="combo-panel"], [data-role="dd-panel"]').forEach(function(panel){
+        if (!panel.classList.contains("hidden")) bottom = Math.max(bottom, panel.getBoundingClientRect().bottom);
+      });
+      var height = Math.ceil(bottom + window.scrollY);
+      if (height === lastHeight) return;
+      lastHeight = height;
+      window.parent.postMessage({ type: "wimetrix:height", height: height }, "*");
+    };
+    new ResizeObserver(reportHeight).observe(appRoot);
+    new MutationObserver(reportHeight).observe(appRoot, { subtree: true, childList: true, attributes: true, attributeFilter: ["class"] });
+    reportHeight();
+  }
+
 })();

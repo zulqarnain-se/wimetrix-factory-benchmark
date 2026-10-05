@@ -42,7 +42,16 @@
 *{ box-sizing:border-box; }
 /* Embedded widget: no page chrome, so the host page shows through and the
    document is only as tall as the wizard card. */
-html, body{ margin:0; padding:0; min-height:auto; background:transparent; }
+html, body{ margin:0; padding:0; min-height:auto !important; background:transparent !important; }
+
+/* Outer wrapper is layout-only; .step-card inside it is the one visible card. */
+#benchmark-wizard-app{
+  background:transparent !important;
+  box-shadow:none !important;
+  border:none !important;
+  padding:0 !important;
+  min-height:auto !important;
+}
 body{
   color:var(--ink-900);
   font-family:'Inter', system-ui, -apple-system, sans-serif;
