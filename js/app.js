@@ -333,7 +333,7 @@
       return;
     }
     note.innerHTML =
-      '<p class="leading-relaxed"><span class="text-emerald-600" aria-hidden="true">\u2728</span> WiMetrix Predicted Baseline: <span class="font-bold text-slate-900">' + predicted + ' Machines</span></p>' +
+      '<p class="leading-relaxed">WiMetrix Predicted Baseline: <span class="font-bold text-slate-900">' + predicted + ' Machines</span></p>' +
       '<p class="text-emerald-800/80 mt-0.5">Optimal setup for ' + vol.toLocaleString() + ' monthly pieces.</p>';
     note.classList.remove("hidden");
 
@@ -399,8 +399,8 @@
         '</button>' +
         '<span class="'+symbolClass+'" aria-hidden="true">&lt;</span>' +
         '<button type="button" id="q3-exact-btn" class="'+cardBase+'">' +
-          '<span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-1">' +
-            '<span aria-hidden="true">\u2728</span> AI Suggested' +
+          '<span class="inline-flex items-center bg-emerald-100 text-emerald-700 text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-1">' +
+            'AI Suggested' +
           '</span>' +
           '<span class="flex items-baseline justify-center gap-1 leading-tight flex-wrap">' +
             '<span id="q3-exact-value" class="text-xl font-bold text-emerald-600">--</span>' +
