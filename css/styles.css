@@ -40,9 +40,10 @@
    CORE RESETS & BASE
    ============================================================ */
 *{ box-sizing:border-box; }
-html, body{ margin:0; padding:0; }
+/* Embedded widget: no page chrome, so the host page shows through and the
+   document is only as tall as the wizard card. */
+html, body{ margin:0; padding:0; min-height:auto; background:transparent; }
 body{
-  background:var(--bg);
   color:var(--ink-900);
   font-family:'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing:antialiased;
