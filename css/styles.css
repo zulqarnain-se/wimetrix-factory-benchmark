@@ -1,0 +1,97 @@
+/* ============================================================
+   CSS VARIABLES
+   Shared design tokens: colors, plus a couple of recurring
+   timing values so entrance animations stay in sync.
+   ============================================================ */
+:root{
+  /* Surface & ink */
+  --bg:#F7F8F7;
+  --ink-900:#0E1512;
+  --ink-700:#2B342F;
+  --ink-500:#5B655F;
+  --ink-400:#8A928C;
+  --border:#E3E7E4;
+
+  /* Brand greens */
+  --green-700:#047857;
+  --green-600:#059669;
+  --green-500:#10B981;
+  --green-100:#D1FAE5;
+  --green-50:#ECFDF5;
+
+  /* Motion — shared entrance timing for modal + backdrop */
+  --anim-enter:0.22s ease-out;
+}
+
+/* ============================================================
+   CORE RESETS & BASE
+   ============================================================ */
+*{ box-sizing:border-box; }
+html, body{ margin:0; padding:0; }
+body{
+  background:var(--bg);
+  color:var(--ink-900);
+  font-family:'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+
+/* Form controls inherit the body typeface; strip native select chrome */
+button, select{ font-family:inherit; }
+select{ appearance:none; -webkit-appearance:none; }
+
+/* ============================================================
+   SELECTION & FOCUS
+   ============================================================ */
+::selection{ background:var(--green-100); }
+button:focus-visible,
+select:focus-visible,
+a:focus-visible{
+  outline:2px solid var(--green-600);
+  outline-offset:2px;
+}
+
+/* ============================================================
+   DECORATIVE
+   Faint grid texture behind the hero dashboard preview.
+   ============================================================ */
+.grid-schematic{
+  background-image:
+    repeating-linear-gradient(0deg,  rgba(5,150,105,0.07) 0px, rgba(5,150,105,0.07) 1px, transparent 1px, transparent 28px),
+    repeating-linear-gradient(90deg, rgba(5,150,105,0.07) 0px, rgba(5,150,105,0.07) 1px, transparent 1px, transparent 28px);
+}
+
+/* ============================================================
+   ANIMATIONS
+   Entrance transitions for the modal shell / backdrop and the
+   looping sparkle pulse on the submit button.
+   ============================================================ */
+.modal-enter{ animation:modalIn var(--anim-enter); }
+.backdrop-enter{ animation:backdropIn var(--anim-enter); }
+.shimmer{ display:inline-block; animation:shimmerPulse 1.8s ease-in-out infinite; }
+
+@keyframes modalIn{
+  from{ opacity:0; transform:translateY(8px) scale(0.98); }
+  to{   opacity:1; transform:translateY(0)   scale(1); }
+}
+@keyframes backdropIn{
+  from{ opacity:0; }
+  to{   opacity:1; }
+}
+@keyframes shimmerPulse{
+  0%, 100%{ opacity:1;   transform:scale(1); }
+  50%{      opacity:0.5; transform:scale(1.2); }
+}
+
+/* ============================================================
+   RESULTS-SCREEN UTILITIES
+   Recurring values lifted out of the JS result-card templates.
+   ============================================================ */
+.btn-pine{ background-color:#00796b; }
+.chip-emerald{ background-color:rgba(0,168,132,0.12); }
+.card-divider{ border-top:1px solid #f1f5f9; }
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.hidden{ display:none !important; }
