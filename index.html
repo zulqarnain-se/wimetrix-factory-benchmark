@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-  /* Point Tailwind's emerald-* utilities at the brand green variables in css/styles.css */
+  /* emerald-* utilities resolve to the brand greens defined in css/styles.css */
   tailwind.config = { theme: { extend: { colors: { emerald: {
     50:  "rgb(var(--green-50-rgb) / <alpha-value>)",
     100: "rgb(var(--green-100-rgb) / <alpha-value>)",
@@ -31,7 +31,7 @@
      class="w-full max-w-lg mx-auto">
   <div class="step-card p-6 bg-white rounded-2xl border border-slate-200/80 border-t-2 border-t-emerald-500/80">
     <!-- FORM STATE -->
-    <div id="modal-form-state">
+    <div id="wizard-form">
       <div class="mb-4">
         <div class="flex items-center justify-between mb-2">
           <span id="step-badge" class="inline-flex items-center bg-emerald-50 text-emerald-700 text-[11px] font-bold px-2.5 py-1 rounded-full border border-emerald-200/50">Step 1 of 4</span>
@@ -62,7 +62,7 @@
     </div>
 
     <!-- RESULTS STATE -->
-    <div id="modal-results-state" class="hidden"></div>
+    <div id="wizard-results" class="hidden"></div>
   </div>
 </div>
 

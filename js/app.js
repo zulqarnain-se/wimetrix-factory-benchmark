@@ -11,7 +11,7 @@
 
   var answers = { q1:"", q2:"", q3:"", currentProfitPercentage:"" };
 
-  /* ---------------------------- Modal field rendering ---------------------------- */
+  /* ---------------------------- Field rendering ---------------------------- */
   var wizardSteps = document.getElementById("step-panels");
   var stepPanelEls = wizardSteps.querySelectorAll(".step-panel");
   var progressFill = document.getElementById("progress-fill");
@@ -149,7 +149,7 @@
     return wrap;
   }
 
-  /* Native select dropdown — used by Q04 (profit percentage) */
+  /* Custom dropdown — used by Step 4 (profit percentage) */
   function buildSelectField(q){
     var wrap = document.createElement("div");
     var itemsHtml = "";
@@ -228,7 +228,6 @@
     return wrap;
   }
 
-  /* Plain numeric input, no dropdown/presets — used by Q03 */
   /* ---- Step 1: visual category grid ---- */
   function buildStep1(){
     var panel = stepPanelEls[0];
@@ -301,127 +300,92 @@
     });
   }
 
-  /* ---- Step 2: capacity combo + dynamic benchmark hint ---- */
-  var q3ComparisonChoice = "exact";
-
-  function updateQ3CardSelection(direction){
-    var ids = { less: "q3-less-btn", exact: "q3-exact-btn", greater: "q3-greater-btn" };
-    Object.keys(ids).forEach(function(key){
-      var btn = document.getElementById(ids[key]);
-      if (!btn) return;
-      var isSel = key === direction;
-      btn.classList.toggle("border-emerald-500", isSel);
-      btn.classList.toggle("bg-emerald-50/50", isSel);
-      btn.classList.toggle("border-gray-200", !isSel);
-    });
-  }
-
-  function updateQ3BenchmarkNote(){
-    var note = document.getElementById("q3-benchmark-note");
-    var lessValue = document.getElementById("q3-less-value");
-    var exactValue = document.getElementById("q3-exact-value");
-    var greaterValue = document.getElementById("q3-greater-value");
-    if (!note) return;
-    var vol = answers.q2 ? answers.q2.numeric : null;
-    var predicted = getQ3PredictedBaseline(answers);
-    if (!vol || predicted == null){
-      note.classList.add("hidden");
-      note.innerHTML = "";
-      if (lessValue) lessValue.textContent = "--";
-      if (exactValue) exactValue.textContent = "--";
-      if (greaterValue) greaterValue.textContent = "--";
-      return;
-    }
-    note.innerHTML =
-      '<p class="leading-relaxed">WiMetrix Predicted Baseline: <span class="font-bold text-slate-900">' + predicted + ' Machines</span></p>' +
-      '<p class="text-emerald-800/80 mt-0.5">Optimal setup for ' + vol.toLocaleString() + ' monthly pieces.</p>';
-    note.classList.remove("hidden");
-
-    var cmp = getQ3ComparisonValues(predicted);
-    if (lessValue) lessValue.textContent = predicted;
-    if (exactValue) exactValue.textContent = predicted;
-    if (greaterValue) greaterValue.textContent = predicted;
-
-    // Keep the saved answer in sync with whichever card is chosen (or default to the
-    // baseline card) whenever the predicted value is recalculated.
-    var actual = cmp[q3ComparisonChoice];
-    answers.q3 = { source: "comparison", numeric: actual, display: actual + " machines (" + q3ComparisonChoice + ")" };
-    updateQ3CardSelection(q3ComparisonChoice);
-  }
-
-  function selectQ3Comparison(direction){
-    var predicted = getQ3PredictedBaseline(answers);
-    if (predicted == null) return;
-    var cmp = getQ3ComparisonValues(predicted);
-    var actual = cmp[direction];
-    q3ComparisonChoice = direction;
-    answers.q3 = { source: "comparison", numeric: actual, display: actual + " machines (" + direction + ")" };
-
-    updateQ3CardSelection(direction);
-    updateNextEnabled();
-    setTimeout(function(){ goToStep(4); }, 300);
-  }
-
+  /* ---- Step 2: monthly volume ---- */
   function buildStep2(){
     var panel = stepPanelEls[1];
     var field = buildComboField(QUESTIONS[1], null, "none");
     panel.appendChild(field);
   }
 
-  /* ---- Step 3: AI-predicted baseline banner + a unified 3-card comparison grid ---- */
+  /* ---- Step 3: predicted baseline + less / exact / greater cards ---- */
+  var Q3_CHOICES = [
+    { key: "less",    symbol: "&lt;", label: "Less" },
+    { key: "exact",   symbol: "=",    label: "Exact Match" },
+    { key: "greater", symbol: "&gt;", label: "Greater" }
+  ];
+  var q3Choice = null;
+  var q3Note, q3Cards;
+
+  function highlightQ3Card(){
+    q3Cards.forEach(function(card){
+      var isSel = card.getAttribute("data-choice") === q3Choice;
+      card.classList.toggle("border-emerald-500", isSel);
+      card.classList.toggle("bg-emerald-50/50", isSel);
+      card.classList.toggle("border-gray-200", !isSel);
+      card.classList.toggle("bg-white", !isSel);
+    });
+  }
+
+  function saveQ3Answer(predicted){
+    var actual = getQ3ComparisonValues(predicted)[q3Choice];
+    answers.q3 = { source: "comparison", numeric: actual, display: actual + " machines (" + q3Choice + ")" };
+  }
+
+  /* Runs every time Step 3 is shown, since the baseline depends on Steps 1 and 2. */
+  function refreshStep3(){
+    var vol = answers.q2 ? answers.q2.numeric : null;
+    var predicted = getQ3PredictedBaseline(answers);
+    var known = !!vol && predicted != null;
+
+    q3Note.classList.toggle("hidden", !known);
+    q3Note.innerHTML = known
+      ? '<p class="leading-relaxed">WiMetrix Predicted Baseline: <span class="font-bold text-slate-900">' + predicted + ' Machines</span></p>' +
+        '<p class="text-emerald-800/80 mt-0.5">Optimal setup for ' + vol.toLocaleString() + ' monthly pieces.</p>'
+      : "";
+    q3Cards.forEach(function(card){
+      card.querySelector('[data-role="q3-value"]').textContent = known ? predicted : "--";
+    });
+
+    if (known && q3Choice) saveQ3Answer(predicted);
+    highlightQ3Card();
+  }
+
+  function selectQ3Choice(choice){
+    var predicted = getQ3PredictedBaseline(answers);
+    if (predicted == null) return;
+    q3Choice = choice;
+    saveQ3Answer(predicted);
+    highlightQ3Card();
+    updateNextEnabled();
+  }
+
   function buildStep3(){
     var panel = stepPanelEls[2];
+    var numberClass = "text-base sm:text-xl font-bold";
 
-    var header = document.createElement("div");
-    header.innerHTML =
+    var cardsHtml = Q3_CHOICES.map(function(c){
+      return '<button type="button" data-choice="'+c.key+'" ' +
+        'class="min-h-[88px] flex flex-col items-center justify-center bg-white border-2 border-gray-200 rounded-xl px-2 py-3 text-center hover:border-emerald-300 transition-all duration-200">' +
+        '<span class="flex items-baseline justify-center gap-x-1 leading-tight flex-wrap '+numberClass+' text-slate-900">' +
+          '<span class="whitespace-nowrap"><span class="text-slate-400" aria-hidden="true">'+c.symbol+'</span> <span data-role="q3-value">--</span></span>' +
+          '<span>Machines</span>' +
+        '</span>' +
+        '<span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mt-1.5">'+c.label+'</span>' +
+      '</button>';
+    }).join("");
+
+    panel.innerHTML =
       '<h3 class="text-xl font-semibold text-slate-900 leading-snug mb-1">'+QUESTIONS[2].label+'</h3>' +
-      '<p class="text-xs text-slate-500 mb-3">'+QUESTIONS[2].subtext+'</p>';
-    panel.appendChild(header);
+      '<p class="text-xs text-slate-500 mb-3">'+QUESTIONS[2].subtext+'</p>' +
+      '<div data-role="q3-note" class="hidden mb-4 p-5 rounded-xl bg-emerald-50/80 border border-emerald-200 text-xs text-emerald-900 shadow-sm"></div>' +
+      '<p class="text-center text-sm text-gray-600 mb-3">Your Current Active Machine Count</p>' +
+      '<div class="grid grid-cols-3 gap-2 sm:gap-3">' + cardsHtml + '</div>';
 
-    var note = document.createElement("div");
-    note.id = "q3-benchmark-note";
-    note.className = "hidden mb-4 p-5 rounded-xl bg-emerald-50/80 border border-emerald-200 text-xs text-emerald-900 shadow-sm";
-    panel.appendChild(note);
-
-    var cardBase = "q3-choice-card relative min-h-[92px] sm:min-h-[100px] flex flex-col items-center justify-center border-2 border-gray-200 rounded-xl p-3 text-center cursor-pointer hover:border-emerald-300 transition-all duration-200";
-    var symbolClass = "text-2xl font-extrabold text-emerald-500 drop-shadow-[0_0_8px_rgba(66,136,48,0.6)] text-center";
-
-    var controlWrap = document.createElement("div");
-    controlWrap.innerHTML =
-      '<p class="text-center text-sm text-gray-600 mb-2">Your Current Active Machine Count</p>' +
-      '<div class="grid grid-cols-[1fr_auto_1fr_auto_1fr] gap-1.5 items-center">' +
-        '<button type="button" id="q3-less-btn" class="'+cardBase+'">' +
-          '<span class="flex items-baseline justify-center gap-1 leading-tight flex-wrap">' +
-            '<span id="q3-less-value" class="text-xl font-bold text-slate-900">--</span>' +
-            '<span class="text-xl font-bold text-slate-900">Machines</span>' +
-          '</span>' +
-          '<span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mt-1.5">Less</span>' +
-        '</button>' +
-        '<span class="'+symbolClass+'" aria-hidden="true">&lt;</span>' +
-        '<button type="button" id="q3-exact-btn" class="'+cardBase+'">' +
-          '<span class="inline-flex items-center bg-emerald-100 text-emerald-700 text-[9px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full mb-1">' +
-            'AI Suggested' +
-          '</span>' +
-          '<span class="flex items-baseline justify-center gap-1 leading-tight flex-wrap">' +
-            '<span id="q3-exact-value" class="text-xl font-bold text-emerald-600">--</span>' +
-            '<span class="text-xl font-bold text-emerald-600">Machines</span>' +
-          '</span>' +
-          '<span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mt-1.5">Exact Match</span>' +
-        '</button>' +
-        '<span class="'+symbolClass+'" aria-hidden="true">&gt;</span>' +
-        '<button type="button" id="q3-greater-btn" class="'+cardBase+'">' +
-          '<span class="flex items-baseline justify-center gap-1 leading-tight flex-wrap">' +
-            '<span id="q3-greater-value" class="text-xl font-bold text-slate-900">--</span>' +
-            '<span class="text-xl font-bold text-slate-900">Machines</span>' +
-          '</span>' +
-          '<span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mt-1.5">Greater</span>' +
-        '</button>' +
-      '</div>';
-    panel.appendChild(controlWrap);
-
-    controlWrap.querySelector("#q3-less-btn").addEventListener("click", function(){ selectQ3Comparison("less"); });
-    controlWrap.querySelector("#q3-exact-btn").addEventListener("click", function(){ selectQ3Comparison("exact"); });
-    controlWrap.querySelector("#q3-greater-btn").addEventListener("click", function(){ selectQ3Comparison("greater"); });
+    q3Note = panel.querySelector('[data-role="q3-note"]');
+    q3Cards = panel.querySelectorAll("[data-choice]");
+    q3Cards.forEach(function(card){
+      card.addEventListener("click", function(){ selectQ3Choice(card.getAttribute("data-choice")); });
+    });
   }
 
   /* ---- Step 4: profit margin combo + submit action ---- */
@@ -508,7 +472,7 @@
     stepBadge.textContent = "Step " + step + " of 4";
     backBtn.classList.toggle("hidden", step === 1);
     nextBtn.classList.toggle("hidden", step === 1 || step === 4);
-    if (step === 3) updateQ3BenchmarkNote();
+    if (step === 3) refreshStep3();
     updateNextEnabled();
   }
 
@@ -533,8 +497,8 @@
   goToStep(1);
 
   /* ---------------------------- Results rendering ---------------------------- */
-  var formState = document.getElementById("modal-form-state");
-  var resultsState = document.getElementById("modal-results-state");
+  var formState = document.getElementById("wizard-form");
+  var resultsState = document.getElementById("wizard-results");
 
   /* ---- Module catalog: one definition reused across all scenarios ---- */
   function renderResults(){
@@ -803,7 +767,6 @@
     });
 
     wizardSteps.querySelectorAll('[data-role="combo-input"]').forEach(function(inp){ inp.value = ""; });
-    wizardSteps.querySelectorAll('[data-role="number-input"]').forEach(function(inp){ inp.value = ""; });
     wizardSteps.querySelectorAll('[data-role="dd-panel"]').forEach(function(panel){ panel.classList.add("hidden"); });
     wizardSteps.querySelectorAll('[data-role="dd-trigger"]').forEach(function(t){ t.setAttribute("aria-expanded", "false"); t.style.boxShadow = ""; });
     wizardSteps.querySelectorAll('[data-role="dd-chevron"]').forEach(function(c){ c.classList.remove("rotate-180"); });
@@ -827,20 +790,8 @@
       if (check) check.classList.add("hidden");
     });
 
-    var q3Note = document.getElementById("q3-benchmark-note");
-    if (q3Note){ q3Note.classList.add("hidden"); q3Note.innerHTML = ""; }
-
-    ["q3-less-value", "q3-exact-value", "q3-greater-value"].forEach(function(id){
-      var el = document.getElementById(id);
-      if (el) el.textContent = "--";
-    });
-    q3ComparisonChoice = "exact";
-    ["q3-less-btn", "q3-exact-btn", "q3-greater-btn"].forEach(function(id){
-      var btn = document.getElementById(id);
-      if (!btn) return;
-      btn.classList.remove("border-emerald-500", "bg-emerald-50/50");
-      btn.classList.add("border-gray-200");
-    });
+    q3Choice = null;
+    refreshStep3();
 
     goToStep(1);
     resultsState.classList.add("hidden");
@@ -848,11 +799,12 @@
   }
 
   /* ---------------------------- Embed height reporting ---------------------------- */
-  /* When iframed, tell the host page how tall the content is so it can size the frame
-     to the active step (open dropdown panels overflow the card, so include them). */
+  /* Inside an iframe, post the content height to the host so it can resize the frame.
+     Open dropdown panels hang below the card, so they count towards the height. */
   if (window.parent !== window){
     var appRoot = document.getElementById("benchmark-wizard-app");
     var lastHeight = 0;
+
     var reportHeight = function(){
       var bottom = appRoot.getBoundingClientRect().bottom;
       appRoot.querySelectorAll('[data-role="combo-panel"], [data-role="dd-panel"]').forEach(function(panel){
@@ -863,6 +815,7 @@
       lastHeight = height;
       window.parent.postMessage({ type: "wimetrix:height", height: height }, "*");
     };
+
     new ResizeObserver(reportHeight).observe(appRoot);
     new MutationObserver(reportHeight).observe(appRoot, { subtree: true, childList: true, attributes: true, attributeFilter: ["class"] });
     reportHeight();

@@ -1,20 +1,11 @@
 /* ============================================================
    CSS VARIABLES
-   Shared design tokens: colors, plus a couple of recurring
-   timing values so entrance animations stay in sync.
    ============================================================ */
 :root{
-  /* Surface & ink */
-  --bg:#F7F8F7;
   --ink-900:#0E1512;
-  --ink-700:#2B342F;
-  --ink-500:#5B655F;
-  --ink-400:#8A928C;
-  --border:#E3E7E4;
 
-  /* Brand greens — official WiMetrix green is #428830 (66 136 48).
-     Declared as RGB channels so Tailwind's emerald-* utilities (remapped
-     to these in index.html) keep working with opacity modifiers. */
+  /* Brand green is #428830. Stored as RGB channels so the Tailwind
+     emerald-* utilities (mapped in index.html) can apply opacity. */
   --green-900-rgb:31 64 22;
   --green-800-rgb:42 86 30;
   --green-700-rgb:53 109 38;
@@ -26,81 +17,41 @@
   --green-100-rgb:221 235 217;
   --green-50-rgb:239 246 237;
 
-  --green-700:rgb(var(--green-700-rgb));
   --green-600:rgb(var(--green-600-rgb));
-  --green-500:rgb(var(--green-500-rgb));
   --green-100:rgb(var(--green-100-rgb));
-  --green-50:rgb(var(--green-50-rgb));
-
-  /* Motion — shared entrance timing for modal + backdrop */
-  --anim-enter:0.22s ease-out;
 }
 
 /* ============================================================
    CORE RESETS & BASE
+   The page is an iframe embed: transparent, and only as tall as
+   the wizard card.
    ============================================================ */
 *{ box-sizing:border-box; }
-/* Embedded widget: no page chrome, so the host page shows through and the
-   document is only as tall as the wizard card. */
-html, body{ margin:0; padding:0; min-height:auto !important; background:transparent !important; }
-
-/* Outer wrapper is layout-only; .step-card inside it is the one visible card. */
-#benchmark-wizard-app{
-  background:transparent !important;
-  box-shadow:none !important;
-  border:none !important;
-  padding:0 !important;
-  min-height:auto !important;
-}
+html, body{ margin:0; padding:0; background:transparent; }
 body{
   color:var(--ink-900);
   font-family:'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing:antialiased;
   font-variant-numeric:tabular-nums;
 }
-
-/* Form controls inherit the body typeface; strip native select chrome */
-button, select{ font-family:inherit; }
-select{ appearance:none; -webkit-appearance:none; }
+button{ font-family:inherit; }
 
 /* ============================================================
    SELECTION & FOCUS
    ============================================================ */
 ::selection{ background:var(--green-100); }
 button:focus-visible,
-select:focus-visible,
 a:focus-visible{
   outline:2px solid var(--green-600);
   outline-offset:2px;
 }
 
 /* ============================================================
-   DECORATIVE
-   Faint grid texture behind the hero dashboard preview.
-   ============================================================ */
-.grid-schematic{
-  background-image:
-    repeating-linear-gradient(0deg,  rgba(5,150,105,0.07) 0px, rgba(5,150,105,0.07) 1px, transparent 1px, transparent 28px),
-    repeating-linear-gradient(90deg, rgba(5,150,105,0.07) 0px, rgba(5,150,105,0.07) 1px, transparent 1px, transparent 28px);
-}
-
-/* ============================================================
    ANIMATIONS
-   Entrance transitions for the modal shell / backdrop and the
-   looping sparkle pulse on the submit button.
+   Sparkle pulse on the submit button and the "Saved" tick.
    ============================================================ */
-.modal-enter{ animation:modalIn var(--anim-enter); }
-.backdrop-enter{ animation:backdropIn var(--anim-enter); }
 .shimmer{ display:inline-block; animation:shimmerPulse 1.8s ease-in-out infinite; }
 
-@keyframes modalIn{
-  from{ opacity:0; transform:translateY(8px) scale(0.98); }
-  to{   opacity:1; transform:translateY(0)   scale(1); }
-}
-@keyframes backdropIn{
-  from{ opacity:0; }
-  to{   opacity:1; }
-}
 @keyframes shimmerPulse{
   0%, 100%{ opacity:1;   transform:scale(1); }
   50%{      opacity:0.5; transform:scale(1.2); }
@@ -108,7 +59,6 @@ a:focus-visible{
 
 /* ============================================================
    RESULTS-SCREEN UTILITIES
-   Recurring values lifted out of the JS result-card templates.
    ============================================================ */
 .btn-pine{ background-color:var(--green-600); }
 .chip-emerald{ background-color:rgb(var(--green-600-rgb) / 0.12); }
